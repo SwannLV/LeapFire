@@ -25,7 +25,7 @@
             var $dom = $("#" + id);
 
             var scene = this.scene = new THREE.Scene();
-            var camera = this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.001, 1000);
+            var camera = this.camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.001, 1000);
             camera.position.z = 2;
             scene.add(camera);
 
@@ -87,25 +87,25 @@
             
             var gui = new dat.GUI();
             gui.add(controller, "speed", 0.1, 10.0).step(0.1);
-            gui.add(controller, "magnitude", 0.0, 10.0).step(0.1).onChange(onUpdateMat);
+            //gui.add(controller, "magnitude", 0.0, 10.0).step(0.1).onChange(onUpdateMat);
             gui.add(controller, "lacunarity", 0.0, 10.0).step(0.1).onChange(onUpdateMat);
             gui.add(controller, "gain", 0.0, 5.0).step(0.1).onChange(onUpdateMat);
             gui.add(controller, "noiseScaleX", 0.5, 5.0).step(0.1).onChange(onUpdateMat);
             gui.add(controller, "noiseScaleY", 0.5, 5.0).step(0.1).onChange(onUpdateMat);
             gui.add(controller, "noiseScaleZ", 0.5, 5.0).step(0.1).onChange(onUpdateMat);
 
-            gui.add(controller, "wireframe").onChange(function() {
+            /*gui.add(controller, "wireframe").onChange(function() {
                 var wireframe = this.fire.children[0];
                 wireframe.visible = controller.wireframe;
-            });
+            });*/
 
             
             var loop = function() {
                 requestAnimationFrame(loop);
                 
                  _thisFire.material.uniforms.magnitude.value = 1 + 9*(100-yHands)/100.0;
-                 console.log(_thisFire.material.uniforms.magnitude.value);
-                console.log(yHands);
+                // console.log(_thisFire.material.uniforms.magnitude.value);
+                //console.log(yHands);
 
                 var delta = clock.getDelta();
                 trackballControls.update(delta);
