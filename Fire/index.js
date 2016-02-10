@@ -15,6 +15,7 @@
     var app, App = function(id) {
         app = this;
         app.init(id);
+        this.fire = {};
     };
 
     App.prototype = {
@@ -44,13 +45,13 @@
                 wireframe : true
             });
 
-            var fire = new THREE.Fire(fireTex);
+            this.fire = new THREE.Fire(fireTex);
 
-            var wireframe = new THREE.Mesh(fire.geometry, wireframeMat.clone());
-            fire.add(wireframe);
+            var wireframe = new THREE.Mesh(this.fire.geometry, wireframeMat.clone());
+            this.fire.add(wireframe);
             wireframe.visible = false;
 
-            scene.add(fire);
+            scene.add(this.fire);
 
             var clock = new THREE.Clock();
             var trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
@@ -58,28 +59,32 @@
             trackballControls.maxDistance = 12;
 
             var controller = {
-                speed       : 1.0,
+                speed       : 0.5,
                 magnitude   : 1.3,
                 lacunarity  : 2.0,
                 gain        : 0.5,
-                noiseScaleX : 1.0,
-                noiseScaleY : 2.0,
-                noiseScaleZ : 1.0,
+                noiseScaleX : 3.5,
+                noiseScaleY : 3.5,
+                noiseScaleZ : 3.5,
                 wireframe   : false
             };
 
+            var _thisFire = this.fire;
+            
             var onUpdateMat = function() {
-                fire.material.uniforms.magnitude.value = controller.magnitude;
-                fire.material.uniforms.lacunarity.value = controller.lacunarity;
-                fire.material.uniforms.gain.value = controller.gain;
-                fire.material.uniforms.noiseScale.value = new THREE.Vector4(
+                _thisFire.material.uniforms.magnitude.value = controller.magnitude;
+                _thisFire.material.uniforms.lacunarity.value = controller.lacunarity;
+                _thisFire.material.uniforms.gain.value = controller.gain;
+                _thisFire.material.uniforms.noiseScale.value = new THREE.Vector4(
                     controller.noiseScaleX,
                     controller.noiseScaleY,
                     controller.noiseScaleZ,
                     0.3
                 );
             };
+            onUpdateMat();
 
+            
             var gui = new dat.GUI();
             gui.add(controller, "speed", 0.1, 10.0).step(0.1);
             gui.add(controller, "magnitude", 0.0, 10.0).step(0.1).onChange(onUpdateMat);
@@ -90,21 +95,27 @@
             gui.add(controller, "noiseScaleZ", 0.5, 5.0).step(0.1).onChange(onUpdateMat);
 
             gui.add(controller, "wireframe").onChange(function() {
-                var wireframe = fire.children[0];
+                var wireframe = this.fire.children[0];
                 wireframe.visible = controller.wireframe;
             });
 
-            (function loop() {
+            
+            var loop = function() {
                 requestAnimationFrame(loop);
+                
+                 _thisFire.material.uniforms.magnitude.value = 1 + 9*(100-yHands)/100.0;
+                 console.log(_thisFire.material.uniforms.magnitude.value);
+                console.log(yHands);
 
                 var delta = clock.getDelta();
                 trackballControls.update(delta);
 
                 var t = clock.elapsedTime * controller.speed;
-                fire.update(t);
+                _thisFire.update(t);
                 
                 renderer.render(scene, camera);
-            })();
+            };
+            loop();
 
             var updateRendererSize = function() {
                 var w = window.innerWidth;
@@ -126,5 +137,5 @@
 })(window, $, THREE);
 
 $(function() {
-    new App("viewer");
+    window.app = new App("viewer");
 });

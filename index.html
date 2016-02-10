@@ -25,6 +25,59 @@
     <link rel="stylesheet" type="text/css" href="Fire/index.css" media="all">
 
 <!-- LEAPMOTION -->
+<script>
+	
+	Leap.loop( {background: true}, leapAnimate ).connect();
+	
+	var yHands = 0;
+	
+	function leapAnimate( frame ) {
+
+		var y = frame._translation[1]  + 100;;
+		if (y > 0 && y < 300)
+		{
+			yHands = y	/ 3.0;
+		}
+		/*else
+		{
+			yHands = 0;
+		}*/
+		//console.log(yHands);
+		//THREE.Fire.material.uniforms.magnitude.value = yHands;
+		/*var countBones = 0;
+		var countArms = 0;
+
+		armMeshes.forEach( function( item ) { scene.remove( item ) } );
+		boneMeshes.forEach( function( item ) { scene.remove( item ) } );
+*/
+		for ( var hand of frame.hands ) {
+
+			/*for ( var finger of hand.fingers ) {
+
+				for ( var bone of finger.bones ) {
+
+					if ( countBones++ === 0 ) { continue; }
+
+					var boneMesh = boneMeshes [ countBones ] || addMesh( boneMeshes );
+					updateMesh( bone, boneMesh );
+
+				}
+
+			}*/
+
+			/*var arm = hand.arm;
+			var armMesh = armMeshes [ countArms++ ] || addMesh( armMeshes );
+			updateMesh( arm, armMesh );
+			armMesh.scale.set( arm.width / 4, arm.width / 2, arm.length );*/
+		}
+
+		/*renderer.render( scene, camera );
+		controls.update();
+		stats.update();*/
+
+	}
+	
+</script>
 <!--
 <script>
 
@@ -165,5 +218,9 @@
 
 </script>
 -->
+
+	<div id="viewer">
+    </div>
+        
 </body>
 </html>
